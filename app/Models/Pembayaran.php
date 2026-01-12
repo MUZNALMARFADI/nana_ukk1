@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Pembayaran extends Model
+{
+    protected $table = 'pembayaran';
+    protected $primaryKey = 'id_pembayaran';
+    
+    protected $fillable = [
+        'id_petugas',
+        'nisn',
+        'tgl_bayar',
+        'bulan_dibayar',
+        'tahun_dibayar',
+        'id_spp',
+        'jumlah_bayar',
+    ];
+
+    protected $casts = [
+        'tgl_bayar' => 'date',
+    ];
+
+    // Relasi ke Petugas
+    public function petugas()
+    {
+        return $this->belongsTo(Petugas::class, 'id_petugas', 'id_petugas');
+    }
+
+    // Relasi ke Siswa
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class, 'nisn', 'nisn');
+    }
+
+    // Relasi ke SPP
+    public function spp()
+    {
+        return $this->belongsTo(Spp::class, 'id_spp', 'id_spp');
+    }
+}
