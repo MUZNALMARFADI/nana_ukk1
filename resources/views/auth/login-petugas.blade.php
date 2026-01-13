@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SPP Management</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,38 +15,107 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #fef9e7 0%, #d5f4e6 50%, #abebc6 100%);
             min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+        }
+
+        /* Decorative blurred circles */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(82, 190, 128, 0.3) 0%, rgba(82, 190, 128, 0) 70%);
+            border-radius: 50%;
+            top: -150px;
+            right: -150px;
+            filter: blur(60px);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(249, 231, 159, 0.4) 0%, rgba(249, 231, 159, 0) 70%);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            filter: blur(80px);
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
         }
 
         .login-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(82, 190, 128, 0.15);
             overflow: hidden;
             width: 100%;
             max-width: 400px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #abebc6 0%, #f9e79f 100%);
+            color: #27ae60;
             padding: 40px 30px;
             text-align: center;
+            position: relative;
+        }
+
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #27ae60;
+            position: relative;
+            z-index: 1;
         }
 
         .login-header h1 {
             font-size: 28px;
             margin-bottom: 10px;
+            color: #27ae60;
+            position: relative;
+            z-index: 1;
         }
 
         .login-header p {
             opacity: 0.9;
             font-size: 14px;
+            color: #229954;
+            position: relative;
+            z-index: 1;
         }
 
         .login-body {
@@ -59,7 +130,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #2c3e50;
+            color: #27ae60;
             font-size: 14px;
         }
 
@@ -72,23 +143,26 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 18px;
-            color: #7f8c8d;
+            font-size: 16px;
+            color: #52be80;
+            z-index: 1;
         }
 
         .form-control {
             width: 100%;
             padding: 15px 15px 15px 45px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #d5f4e6;
             border-radius: 10px;
             font-size: 14px;
             transition: all 0.3s;
+            background: #fefefe;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #52be80;
+            box-shadow: 0 0 0 3px rgba(82, 190, 128, 0.1);
+            background: white;
         }
 
         .form-control.is-invalid {
@@ -105,7 +179,7 @@
         .btn-login {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #52be80 0%, #f9e79f 100%);
             color: white;
             border: none;
             border-radius: 10px;
@@ -113,15 +187,41 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-login:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(82, 190, 128, 0.3);
         }
 
         .btn-login:active {
             transform: translateY(0);
+        }
+
+        .btn-login i,
+        .btn-login span {
+            position: relative;
+            z-index: 1;
         }
 
         .alert {
@@ -135,42 +235,54 @@
         }
 
         .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: #d5f4e6;
+            color: #1e8449;
+            border: 1px solid #abebc6;
         }
 
         .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #fadbd8;
+            color: #922b21;
+            border: 1px solid #f5b7b1;
         }
 
         .login-footer {
             text-align: center;
             padding: 20px;
-            background: #f8f9fa;
-            color: #7f8c8d;
+            background: #fef9e7;
+            color: #52be80;
             font-size: 13px;
         }
 
         .demo-info {
-            background: #e3f2fd;
-            padding: 15px;
+            background: linear-gradient(135deg, #fef9e7 0%, #fff9e6 100%);
+            padding: 18px;
             border-radius: 10px;
             margin-top: 20px;
             font-size: 13px;
-            color: #1976d2;
+            color: #d4ac0d;
+            border: 1px solid #f9e79f;
+            box-shadow: 0 4px 15px rgba(249, 231, 159, 0.2);
         }
 
         .demo-info strong {
             display: block;
-            margin-bottom: 8px;
-            color: #0d47a1;
+            margin-bottom: 10px;
+            color: #b7950b;
+            font-size: 14px;
         }
 
         .demo-info p {
-            margin: 5px 0;
+            margin: 8px 0;
+            color: #7d6608;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-info i {
+            color: #52be80;
+            font-size: 14px;
         }
 
         .password-toggle {
@@ -179,30 +291,54 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            font-size: 18px;
-            color: #7f8c8d;
+            font-size: 16px;
+            color: #52be80;
             user-select: none;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: #27ae60;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 100%;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+
+            .header-icon {
+                font-size: 40px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>💰 SPP Management</h1>
+            <div class="header-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <h1>SPP Management</h1>
             <p>Sistem Pembayaran SPP Sekolah</p>
         </div>
 
         <div class="login-body">
             @if(session('success'))
             <div class="alert alert-success">
-                <span>✅</span>
+                <i class="fas fa-check-circle"></i>
                 <span>{{ session('success') }}</span>
             </div>
             @endif
 
             @if(session('error'))
             <div class="alert alert-error">
-                <span>❌</span>
+                <i class="fas fa-exclamation-circle"></i>
                 <span>{{ session('error') }}</span>
             </div>
             @endif
@@ -211,9 +347,9 @@
                 @csrf
                 
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
                     <div class="input-wrapper">
-                        <span class="input-icon">👤</span>
+                        <i class="fas fa-user input-icon"></i>
                         <input 
                             type="text" 
                             name="username" 
@@ -225,14 +361,14 @@
                         >
                     </div>
                     @error('username')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <span class="invalid-feedback"><i class="fas fa-exclamation-triangle"></i> {{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
                     <div class="input-wrapper">
-                        <span class="input-icon">🔒</span>
+                        <i class="fas fa-lock input-icon"></i>
                         <input 
                             type="password" 
                             name="password" 
@@ -240,41 +376,43 @@
                             class="form-control @error('password') is-invalid @enderror" 
                             placeholder="Masukkan password"
                         >
-                        <span class="password-toggle" onclick="togglePassword()">👁️</span>
+                        <i class="fas fa-eye password-toggle" id="togglePassword" onclick="togglePassword()"></i>
                     </div>
                     @error('password')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <span class="invalid-feedback"><i class="fas fa-exclamation-triangle"></i> {{ $message }}</span>
                     @enderror
                 </div>
 
                 <button type="submit" class="btn-login">
-                    🚀 Login Sekarang
+                    <i class="fas fa-sign-in-alt"></i> <span>Login Sekarang</span>
                 </button>
             </form>
 
             <div class="demo-info">
-                <strong>🔑 Demo Login:</strong>
-                <p><strong>Admin:</strong> admin / admin123</p>
-                <p><strong>Petugas:</strong> petugas1 / petugas123</p>
+                <strong><i class="fas fa-key"></i> Demo Login:</strong>
+                <p><i class="fas fa-user-shield"></i> <strong>Admin:</strong> admin / admin123</p>
+                <p><i class="fas fa-user-tie"></i> <strong>Petugas:</strong> petugas1 / petugas123</p>
             </div>
         </div>
 
         <div class="login-footer">
-            © 2026 SPP Management System. All rights reserved.
+            <i class="fas fa-copyright"></i> 2026 SPP Management System. All rights reserved.
         </div>
     </div>
 
     <script>
         function togglePassword() {
             const passwordInput = document.getElementById('password');
-            const toggleIcon = document.querySelector('.password-toggle');
+            const toggleIcon = document.getElementById('togglePassword');
             
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggleIcon.textContent = '🙈';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
             } else {
                 passwordInput.type = 'password';
-                toggleIcon.textContent = '👁️';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
             }
         }
     </script>
