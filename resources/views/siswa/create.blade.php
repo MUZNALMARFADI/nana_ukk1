@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="content-header">
-    <h1>➕ Tambah Data Siswa</h1>
+    <h1>Tambah Data Siswa</h1>
     <a href="{{ route('siswa.index') }}" class="btn-back">
-        <i>⬅️</i> Kembali
+        <i class="fas fa-arrow-left"></i> Kembali
     </a>
 </div>
 
@@ -92,8 +92,12 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">💾 Simpan</button>
-                <a href="{{ route('siswa.index') }}" class="btn-secondary">❌ Batal</a>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+                <a href="{{ route('siswa.index') }}" class="btn-secondary">
+                    <i class="fas fa-times"></i> Batal
+                </a>
             </div>
         </form>
     </div>

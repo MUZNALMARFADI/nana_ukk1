@@ -4,25 +4,25 @@
 
 @section('content')
 <div class="content-header">
-    <h1>🏫 Data Kelas</h1>
+    <h1>Data Kelas</h1>
     
     @if(session('petugas')->level == 'admin')
     <a href="{{ route('kelas.create') }}" class="btn-add">
-        <i>➕</i> Tambah Kelas
+        <i class="fas fa-plus"></i> Tambah Kelas
     </a>
     @endif
 </div>
 
 @if(session('success'))
 <div class="alert alert-success">
-    <span>✅</span>
+    <i class="fas fa-check-circle"></i>
     <span>{{ session('success') }}</span>
 </div>
 @endif
 
 @if(session('error'))
 <div class="alert alert-error">
-    <span>❌</span>
+    <i class="fas fa-exclamation-circle"></i>
     <span>{{ session('error') }}</span>
 </div>
 @endif
@@ -48,14 +48,20 @@
                     <td>{{ $item->siswa_count }} siswa</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('kelas.show', $item->id_kelas) }}" class="btn-view">👁️ Lihat</a>
+                            <a href="{{ route('kelas.show', $item->id_kelas) }}" class="btn-view">
+                                <i class="fas fa-eye"></i> Lihat
+                            </a>
                             
                             @if(session('petugas')->level == 'admin')
-                            <a href="{{ route('kelas.edit', $item->id_kelas) }}" class="btn-edit">✏️ Edit</a>
+                            <a href="{{ route('kelas.edit', $item->id_kelas) }}" class="btn-edit">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
                             <form action="{{ route('kelas.destroy', $item->id_kelas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn-delete">🗑️ Hapus</button>
+                                <button type="submit" class="btn-delete">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </form>
                             @endif
                         </div>

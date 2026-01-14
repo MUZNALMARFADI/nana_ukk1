@@ -4,22 +4,22 @@
 
 @section('content')
 <div class="content-header">
-    <h1>📝 Data Pembayaran SPP</h1>
+    <h1>Data Pembayaran SPP</h1>
     <a href="{{ route('pembayaran.create') }}" class="btn-add">
-        <i>➕</i> Tambah Pembayaran
+        <i class="fas fa-plus"></i> Tambah Pembayaran
     </a>
 </div>
 
 @if(session('success'))
 <div class="alert alert-success">
-    <span>✅</span>
+    <i class="fas fa-check-circle"></i>
     <span>{{ session('success') }}</span>
 </div>
 @endif
 
 @if(session('error'))
 <div class="alert alert-error">
-    <span>❌</span>
+    <i class="fas fa-exclamation-circle"></i>
     <span>{{ session('error') }}</span>
 </div>
 @endif
@@ -60,7 +60,9 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label>&nbsp;</label>
-                        <button type="submit" class="btn-primary" style="width: 100%; display: block;">🔍 Filter</button>
+                        <button type="submit" class="btn-primary" style="width: 100%; display: block;">
+                            <i class="fas fa-search"></i> Filter
+                        </button>
                     </div>
                 </div>
             </div>
@@ -100,12 +102,18 @@
                         <td>{{ $item->petugas->nama_petugas ?? '-' }}</td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('pembayaran.show', $item->id_pembayaran) }}" class="btn-view">👁️</a>
-                                <a href="{{ route('pembayaran.edit', $item->id_pembayaran) }}" class="btn-edit">✏️</a>
+                                <a href="{{ route('pembayaran.show', $item->id_pembayaran) }}" class="btn-view">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('pembayaran.edit', $item->id_pembayaran) }}" class="btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                                 <form action="{{ route('pembayaran.destroy', $item->id_pembayaran) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete">🗑️</button>
+                                    <button type="submit" class="btn-delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
