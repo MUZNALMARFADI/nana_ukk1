@@ -135,4 +135,56 @@
         @endif
     </div>
 </div>
+
+<style>
+/* ===== FORCE SMALL PAGINATION ===== */
+.pagination-wrapper {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+nav[role="navigation"] {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+/* angka & tombol */
+nav[role="navigation"] a,
+nav[role="navigation"] span {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    min-height: unset !important;
+    min-width: unset !important;
+}
+
+/* ikon panah <<< >>> */
+nav[role="navigation"] svg {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+/* active page */
+nav[role="navigation"] .bg-indigo-600,
+nav[role="navigation"] .bg-gray-200 {
+    background: #52be80 !important;
+    color: white !important;
+    border-radius: 5px;
+}
+
+/* hover */
+nav[role="navigation"] a:hover {
+    background: #d5f4e6 !important;
+}
+
+/* hilangkan teks "Showing 1 to 10 of x results" */
+nav[role="navigation"] p {
+    display: none !important;
+}
+</style>
+
 @endsection

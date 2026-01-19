@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="content-header">
-    <h1>➕ Entri Pembayaran SPP</h1>
+    <h1><i class="fas fa-plus-circle"></i> Entri Pembayaran SPP</h1>
     <a href="{{ route('pembayaran.index') }}" class="btn-back">
-        <i>⬅️</i> Kembali
+        <i class="fas fa-arrow-left"></i> Kembali
     </a>
 </div>
 
@@ -16,7 +16,9 @@
             @csrf
             
             <div class="form-group">
-                <label for="nisn">NISN Siswa <span class="required">*</span></label>
+                <label for="nisn">
+                    <i class="fas fa-user-graduate"></i> NISN Siswa <span class="required">*</span>
+                </label>
                 <select name="nisn" id="nisn" class="form-control @error('nisn') is-invalid @enderror" required>
                     <option value="">-- Pilih Siswa --</option>
                     @foreach($siswa as $s)
@@ -32,18 +34,20 @@
 
             <!-- Info Siswa -->
             <div id="infoSiswa" style="display: none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h4 style="margin-bottom: 10px;">📋 Informasi Siswa</h4>
+                <h4 style="margin-bottom: 10px;">
+                    <i class="fas fa-info-circle"></i> Informasi Siswa
+                </h4>
                 <table class="detail-table" style="background: white;">
                     <tr>
-                        <th width="150">Nama</th>
+                        <th width="150"><i class="fas fa-user"></i> Nama</th>
                         <td id="info_nama">-</td>
                     </tr>
                     <tr>
-                        <th>Kelas</th>
+                        <th><i class="fas fa-door-open"></i> Kelas</th>
                         <td id="info_kelas">-</td>
                     </tr>
                     <tr>
-                        <th>Nominal SPP</th>
+                        <th><i class="fas fa-money-bill-wave"></i> Nominal SPP</th>
                         <td id="info_spp">-</td>
                     </tr>
                 </table>
@@ -52,7 +56,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="tgl_bayar">Tanggal Bayar <span class="required">*</span></label>
+                        <label for="tgl_bayar">
+                            <i class="fas fa-calendar"></i> Tanggal Bayar <span class="required">*</span>
+                        </label>
                         <input type="date" name="tgl_bayar" id="tgl_bayar" class="form-control @error('tgl_bayar') is-invalid @enderror" value="{{ old('tgl_bayar', date('Y-m-d')) }}" required>
                         @error('tgl_bayar')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -62,7 +68,9 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="bulan_dibayar">Bulan Dibayar <span class="required">*</span></label>
+                        <label for="bulan_dibayar">
+                            <i class="fas fa-calendar-alt"></i> Bulan Dibayar <span class="required">*</span>
+                        </label>
                         <select name="bulan_dibayar" id="bulan_dibayar" class="form-control @error('bulan_dibayar') is-invalid @enderror" required>
                             <option value="">-- Pilih Bulan --</option>
                             @foreach($bulan as $b)
@@ -79,7 +87,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="tahun_dibayar">Tahun Dibayar <span class="required">*</span></label>
+                        <label for="tahun_dibayar">
+                            <i class="fas fa-calendar-check"></i> Tahun Dibayar <span class="required">*</span>
+                        </label>
                         <input type="text" name="tahun_dibayar" id="tahun_dibayar" class="form-control @error('tahun_dibayar') is-invalid @enderror" value="{{ old('tahun_dibayar', date('Y')) }}" maxlength="4" required>
                         @error('tahun_dibayar')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -89,7 +99,9 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="id_spp">Tahun SPP <span class="required">*</span></label>
+                        <label for="id_spp">
+                            <i class="fas fa-file-invoice-dollar"></i> Tahun SPP <span class="required">*</span>
+                        </label>
                         <select name="id_spp" id="id_spp" class="form-control @error('id_spp') is-invalid @enderror" required>
                             <option value="">-- Pilih Tahun SPP --</option>
                             @foreach($spp as $s)
@@ -106,7 +118,9 @@
             </div>
 
             <div class="form-group">
-                <label for="jumlah_bayar">Jumlah Bayar <span class="required">*</span></label>
+                <label for="jumlah_bayar">
+                    <i class="fas fa-money-bill"></i> Jumlah Bayar <span class="required">*</span>
+                </label>
                 <input type="number" name="jumlah_bayar" id="jumlah_bayar" class="form-control @error('jumlah_bayar') is-invalid @enderror" value="{{ old('jumlah_bayar') }}" placeholder="Masukkan jumlah pembayaran" required>
                 @error('jumlah_bayar')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -114,8 +128,12 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">💾 Simpan Pembayaran</button>
-                <a href="{{ route('pembayaran.index') }}" class="btn-secondary">❌ Batal</a>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Simpan Pembayaran
+                </button>
+                <a href="{{ route('pembayaran.index') }}" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Batal
+                </a>
             </div>
         </form>
     </div>

@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="content-header">
-    <h1>➕ Tambah Data SPP</h1>
+    <h1><i class="fas fa-plus-circle"></i> Tambah Data SPP</h1>
     <a href="{{ route('spp.index') }}" class="btn-back">
-        <i>⬅️</i> Kembali
+        <i class="fas fa-arrow-left"></i> Kembali
     </a>
 </div>
 
@@ -16,7 +16,9 @@
             @csrf
             
             <div class="form-group">
-                <label for="tahun">Tahun <span class="required">*</span></label>
+                <label for="tahun">
+                    <i class="fas fa-calendar-alt"></i> Tahun <span class="required">*</span>
+                </label>
                 <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror" value="{{ old('tahun') }}" placeholder="Contoh: 2025" required>
                 @error('tahun')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -24,17 +26,23 @@
             </div>
 
             <div class="form-group">
-                <label for="nominal">Nominal <span class="required">*</span></label>
+                <label for="nominal">
+                    <i class="fas fa-money-bill-wave"></i> Nominal <span class="required">*</span>
+                </label>
                 <input type="number" name="nominal" id="nominal" class="form-control @error('nominal') is-invalid @enderror" value="{{ old('nominal') }}" placeholder="Contoh: 175000" required>
                 @error('nominal')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <small class="form-text">Masukkan nominal tanpa titik atau koma</small>
+                <small class="form-text"><i class="fas fa-info-circle"></i> Masukkan nominal tanpa titik atau koma</small>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">💾 Simpan</button>
-                <a href="{{ route('spp.index') }}" class="btn-secondary">❌ Batal</a>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+                        <a href="{{ route('spp.index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-1"></i> Batal
+            </a>
             </div>
         </form>
     </div>

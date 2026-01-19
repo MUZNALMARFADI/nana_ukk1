@@ -39,34 +39,10 @@ Route::middleware('siswa')->prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/history', [SiswaDashboardController::class, 'historyPembayaran'])->name('history');
 });
 
-// ================== PETUGAS AREA ==================
-Route::middleware('petugas')->group(function () {
-
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Siswa (VIEW ONLY)
-    Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
-    Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])->name('siswa.show');
-
-    // Kelas (VIEW ONLY)
-    Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
-    Route::get('/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
-
-    // SPP (VIEW ONLY)
-    Route::get('/spp', [SppController::class, 'index'])->name('spp.index');
-    Route::get('/spp/{spp}', [SppController::class, 'show'])->name('spp.show');
-
-    // Pembayaran
-    Route::resource('pembayaran', PembayaranController::class);
-    Route::get('/pembayaran-siswa/{nisn}', [PembayaranController::class, 'getSiswa'])
-        ->name('pembayaran.getSiswa');
-});
-
-// ================== ADMIN AREA ==================
+// ================== ADMIN AREA (HARUS DI ATAS PETUGAS!) ==================
 Route::middleware('admin')->group(function () {
 
-    // CRUD SISWA
+    // CRUD SISWA - Route spesifik harus di atas route dengan parameter
     Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
     Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store');
     Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
@@ -97,4 +73,28 @@ Route::middleware('admin')->group(function () {
         Route::get('/tunggakan', [LaporanController::class, 'tunggakan'])->name('tunggakan');
         Route::get('/per-kelas', [LaporanController::class, 'perKelas'])->name('per-kelas');
     });
+});
+
+// ================== PETUGAS AREA (HARUS DI BAWAH ADMIN!) ==================
+Route::middleware('petugas')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Siswa (VIEW ONLY)
+    Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])->name('siswa.show');
+
+    // Kelas (VIEW ONLY)
+    Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
+    Route::get('/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
+
+    // SPP (VIEW ONLY)
+    Route::get('/spp', [SppController::class, 'index'])->name('spp.index');
+    Route::get('/spp/{spp}', [SppController::class, 'show'])->name('spp.show');
+
+    // Pembayaran
+    Route::resource('pembayaran', PembayaranController::class);
+    Route::get('/pembayaran-siswa/{nisn}', [PembayaranController::class, 'getSiswa'])
+        ->name('pembayaran.getSiswa');
 });

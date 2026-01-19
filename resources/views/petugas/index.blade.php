@@ -4,22 +4,19 @@
 
 @section('content')
 <div class="content-header">
-    <h1>👨‍💼 Data Petugas</h1>
-    <a href="{{ route('petugas.create') }}" class="btn-add">
-        <i>➕</i> Tambah Petugas
-    </a>
+    <h1><i class="fas fa-user-tie"></i> Data Petugas</h1>
 </div>
 
 @if(session('success'))
 <div class="alert alert-success">
-    <span>✅</span>
+    <i class="fas fa-check-circle"></i>
     <span>{{ session('success') }}</span>
 </div>
 @endif
 
 @if(session('error'))
 <div class="alert alert-error">
-    <span>❌</span>
+    <i class="fas fa-exclamation-circle"></i>
     <span>{{ session('error') }}</span>
 </div>
 @endif
@@ -30,9 +27,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Username</th>
-                    <th>Nama Petugas</th>
-                    <th>Level</th>
+                    <th><i class="fas fa-user"></i> Username</th>
+                    <th><i class="fas fa-id-card"></i> Nama Petugas</th>
+                    <th><i class="fas fa-shield-alt"></i> Level</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -44,30 +41,55 @@
                     <td>{{ $item->nama_petugas }}</td>
                     <td>
                         <span class="badge badge-{{ $item->level == 'admin' ? 'primary' : 'success' }}">
+                            <i class="fas fa-{{ $item->level == 'admin' ? 'crown' : 'user-check' }}"></i>
                             {{ strtoupper($item->level) }}
                         </span>
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('petugas.show', $item->id_petugas) }}" class="btn-view">👁️ Lihat</a>
-                            <a href="{{ route('petugas.edit', $item->id_petugas) }}" class="btn-edit">✏️ Edit</a>
-                            @if(session('petugas')->id_petugas != $item->id_petugas)
-                            <form action="{{ route('petugas.destroy', $item->id_petugas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-delete">🗑️ Hapus</button>
-                            </form>
-                            @endif
+                            <a href="{{ route('petugas.show', $item->id_petugas) }}" class="btn-view" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </a>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center">Belum ada data petugas</td>
+                    <td colspan="5" class="text-center">
+                        <i class="fas fa-inbox"></i> Belum ada data petugas
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 </div>
+
+<style>
+/* Badge Styles */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.badge-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.badge-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+}
+
+.badge i {
+    font-size: 12px;
+}
+</style>
 @endsection

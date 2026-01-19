@@ -3,504 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPP Management System</title>
-    <!-- Font Awesome Icons -->
+    <title>SPP Management System - Kelola Pembayaran SPP Modern</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #e8f5e9;
+            --accent-yellow: #fffde7;
+            --text-dark: #2f4f4f;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fef9e7 0%, #d5f4e6 50%, #abebc6 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-            position: relative;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f9fbe7, #dff5ea, #c8f0e0);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
-        /* Decorative blurred circles */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(82, 190, 128, 0.3) 0%, rgba(82, 190, 128, 0) 70%);
-            border-radius: 50%;
-            top: -150px;
-            right: -150px;
-            filter: blur(60px);
-            animation: float 8s ease-in-out infinite;
-        }
-
-        body::after {
-            content: '';
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(249, 231, 159, 0.4) 0%, rgba(249, 231, 159, 0) 70%);
-            border-radius: 50%;
-            bottom: -100px;
-            left: -100px;
-            filter: blur(80px);
-            animation: float 10s ease-in-out infinite reverse;
-        }
-
-        /* Additional blur elements */
-        .blur-circle-1 {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(171, 235, 198, 0.3) 0%, rgba(171, 235, 198, 0) 70%);
-            border-radius: 50%;
-            top: 50%;
-            right: 10%;
-            filter: blur(70px);
-            animation: float 12s ease-in-out infinite;
-        }
-
-        .blur-circle-2 {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(244, 208, 63, 0.25) 0%, rgba(244, 208, 63, 0) 70%);
-            border-radius: 50%;
-            bottom: 30%;
-            left: 15%;
-            filter: blur(90px);
-            animation: float 9s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        .container {
-            text-align: center;
-            max-width: 1200px;
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
             width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 15px 0;
+            border-bottom: 1px solid #e0f2f1;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1200px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            margin-bottom: 60px;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
         }
 
         .logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #52be80 0%, #f9e79f 100%);
-            border-radius: 50%;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-green);
+            text-decoration: none;
             display: flex;
             align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #388e3c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-green);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            font-size: 45px;
-            box-shadow: 0 10px 30px rgba(82, 190, 128, 0.3);
-            animation: pulse 2s ease-in-out infinite;
-            color: white;
+            text-align: center;
+            padding: 120px 20px 60px;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(82, 190, 128, 0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(82, 190, 128, 0.4); }
+        .hero-badge {
+            background: var(--light-green);
+            color: var(--primary-green);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .header h1 {
-            font-size: 56px;
-            background: linear-gradient(135deg, #27ae60 0%, #f39c12 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            max-width: 800px;
         }
 
-        .header p {
-            font-size: 22px;
-            color: #52be80;
-            font-weight: 500;
-        }
-
-        .login-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+        .hero p {
+            font-size: 1.1rem;
+            color: #4f6f64;
+            max-width: 700px;
             margin-bottom: 40px;
         }
 
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #81c784, #66bb6a);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-green);
+            border: 1px solid #c8e6c9;
+        }
+
+        /* FEATURES */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light-green);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--primary-green);
+            margin: 0 auto 25px;
+        }
+
+        /* STATS SECTION */
+        .stats {
+            background: white;
+            padding: 80px 20px;
+            margin: 50px 0;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        /* LOGIN CARDS */
+        .login-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .login-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            justify-content: center;
+        }
+
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 50px 40px;
-            box-shadow: 0 15px 50px rgba(82, 190, 128, 0.15);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
             text-decoration: none;
             color: inherit;
-            display: block;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 1s ease-out;
-            animation-fill-mode: both;
-            border: 1px solid rgba(82, 190, 128, 0.1);
-        }
-
-        .login-card:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-
-        .login-card:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, #52be80 0%, #f9e79f 100%);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .login-card:hover::before {
-            transform: scaleX(1);
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid transparent;
         }
 
         .login-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 25px 60px rgba(82, 190, 128, 0.25);
-            background: rgba(255, 255, 255, 1);
+            transform: scale(1.02);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        .login-card.petugas:hover .login-icon {
-            background: linear-gradient(135deg, #52be80 0%, #27ae60 100%);
-            transform: scale(1.1) rotate(5deg);
+        /* FAQ SECTION */
+        .faq {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px;
         }
 
-        .login-card.siswa:hover .login-icon {
-            background: linear-gradient(135deg, #f9e79f 0%, #f4d03f 100%);
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .login-icon {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            transition: all 0.4s ease;
-            position: relative;
-            color: white;
-        }
-
-        .login-card.petugas .login-icon {
-            background: linear-gradient(135deg, #abebc6 0%, #52be80 100%);
-            box-shadow: 0 10px 30px rgba(82, 190, 128, 0.3);
-        }
-
-        .login-card.siswa .login-icon {
-            background: linear-gradient(135deg, #f9e79f 0%, #f4d03f 100%);
-            box-shadow: 0 10px 30px rgba(249, 231, 159, 0.4);
-        }
-
-        .login-card h2 {
-            font-size: 32px;
+        .faq-item {
+            background: white;
+            border-radius: 16px;
             margin-bottom: 15px;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .login-card p {
-            color: #7f8c8d;
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .btn-login {
-            display: inline-block;
-            padding: 16px 45px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-            position: relative;
+            border: 1px solid #e0f2f1;
             overflow: hidden;
         }
 
-        .login-card.petugas .btn-login {
-            background: linear-gradient(135deg, #52be80 0%, #27ae60 100%);
-            box-shadow: 0 8px 20px rgba(82, 190, 128, 0.3);
+        .faq-question {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        .login-card.siswa .btn-login {
-            background: linear-gradient(135deg, #f9e79f 0%, #f4d03f 100%);
-            box-shadow: 0 8px 20px rgba(249, 231, 159, 0.4);
-            color: #7d6608;
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-out;
+            color: #546e7a;
         }
 
-        .btn-login:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 30px rgba(82, 190, 128, 0.4);
+        .faq-item.active .faq-answer {
+            padding-bottom: 20px;
+            max-height: 200px;
         }
 
-        .btn-login::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
         }
 
-        .btn-login:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-login span {
-            position: relative;
-            z-index: 1;
-        }
-
+        /* FOOTER */
         .footer {
-            color: #52be80;
-            font-size: 14px;
-            margin-top: 50px;
-            animation: fadeIn 2s ease-out;
+            background: #f1f8e9;
+            color: var(--text-dark);
+            padding: 80px 20px 40px;
+            border-top: 1px solid #dcedc8;
         }
 
-        .footer-links {
-            margin-top: 10px;
-            color: #7f8c8d;
-            font-size: 13px;
-        }
-
-        /* Info Section */
-        .info-section {
-            margin: 50px 0;
-            animation: fadeInUp 1s ease-out 0.6s;
-            animation-fill-mode: both;
-        }
-
-        .info-cards {
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
         }
 
-        .info-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px 25px;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(82, 190, 128, 0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-            border: 1px solid rgba(82, 190, 128, 0.1);
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: var(--primary-green);
         }
 
-        .info-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(82, 190, 128, 0.15);
-            background: rgba(255, 255, 255, 1);
+        .footer-column ul {
+            list-style: none;
         }
 
-        .info-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #d5f4e6 0%, #fef9e7 100%);
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #4f6f64;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-green);
+            padding-left: 5px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .newsletter-form input {
+            padding: 12px;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px 0 0 8px;
+            flex: 1;
+            outline: none;
+        }
+
+        .newsletter-form button {
+            padding: 12px 18px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            border: none;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .social-icons a {
+            width: 38px;
+            height: 38px;
+            background: white;
+            border: 1px solid #c8e6c9;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            transition: all 0.5s ease;
-            color: #52be80;
+            color: var(--primary-green);
+            text-decoration: none;
         }
 
-        .info-card:hover .info-icon {
-            background: linear-gradient(135deg, #abebc6 0%, #f9e79f 100%);
-            transform: rotate(360deg) scale(1.1);
-            color: #27ae60;
-        }
-
-        .info-card h3 {
-            font-size: 20px;
-            color: #27ae60;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .info-card p {
-            color: #7f8c8d;
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 50px auto 0;
+            padding-top: 25px;
+            border-top: 1px solid #dcedc8;
+            text-align: center;
             font-size: 14px;
-            line-height: 1.6;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 30px 15px;
-            }
-
-            .header h1 {
-                font-size: 36px;
-            }
-
-            .header p {
-                font-size: 18px;
-            }
-
-            .login-options {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .login-card {
-                padding: 40px 30px;
-            }
-
-            .login-icon {
-                width: 100px;
-                height: 100px;
-                font-size: 45px;
-            }
-
-            .login-card h2 {
-                font-size: 26px;
-            }
-
-            .info-cards {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="blur-circle-1"></div>
-    <div class="blur-circle-2"></div>
-    
-    <div class="container">
-        <div class="header">
-            <div class="logo">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
                 <i class="fas fa-wallet"></i>
-            </div>
-            <h1>SPP Management</h1>
-            <p>Sistem Informasi Pembayaran SPP Sekolah</p>
-        </div>
-
-        <div class="login-options">
-            <!-- Login Petugas/Admin -->
-            <a href="{{ route('login.form') }}" class="login-card petugas">
-                <div class="login-icon">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <h2>Login Petugas</h2>
-                <p>Untuk Admin dan Petugas yang mengelola sistem pembayaran SPP</p>
-                <span class="btn-login">
-                    <span>Masuk Sebagai Petugas <i class="fas fa-arrow-right"></i></span>
-                </span>
+                <span>SPP System</span>
             </a>
+            <ul class="nav-links">
+                <li><a href="#features">Fitur</a></li>
+                <li><a href="#stats">Statistik</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
 
-            <!-- Login Siswa -->
-            <a href="{{ route('siswa.login.form') }}" class="login-card siswa">
-                <div class="login-icon">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <h2>Login Siswa</h2>
-                <p>Untuk Siswa yang ingin melihat riwayat pembayaran SPP</p>
-                <span class="btn-login">
-                    <span>Masuk Sebagai Siswa <i class="fas fa-arrow-right"></i></span>
-                </span>
+    <section class="hero">
+        <div class="hero-badge">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            Sistem Pembayaran Modern
+        </div>
+        <h1>Kelola Pembayaran SPP Lebih Mudah & Cepat</h1>
+        <p>Platform manajemen pembayaran SPP terintegrasi untuk sekolah masa kini. Aman, transparan, dan dapat diakses kapan saja.</p>
+        <div class="hero-buttons">
+            <a href="#login" class="btn btn-primary">
+                <i class="fas fa-rocket"></i>
+                Mulai Sekarang
+            </a>
+            <a href="#features" class="btn btn-secondary">
+                <i class="fas fa-circle-info"></i>
+                Pelajari Lebih Lanjut
             </a>
         </div>
+    </section>
 
-        <!-- Info Section -->
-        <div class="info-section">
-            <div class="info-cards">
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Cepat & Mudah</h3>
-                    <p>Proses pembayaran SPP yang cepat dan mudah dipahami</p>
-                </div>
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Aman & Terpercaya</h3>
-                    <p>Data pembayaran Anda tersimpan dengan aman</p>
-                </div>
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Laporan Lengkap</h3>
-                    <p>Riwayat pembayaran tersedia secara real-time</p>
-                </div>
+    <section id="features" class="features">
+        <div class="section-header">
+            <span class="hero-badge">Fitur Unggulan</span>
+            <h2>Kenapa Memilih Kami?</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Proses Cepat</h3>
+                <p>Pencatatan transaksi otomatis yang hemat waktu admin sekolah.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                <h3>Keamanan Data</h3>
+                <p>Enkripsi data berlapis untuk menjaga privasi keuangan sekolah.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                <h3>Laporan Akurat</h3>
+                <p>Visualisasi data keuangan yang mudah dipahami oleh pimpinan.</p>
             </div>
         </div>
+    </section>
 
-        <div class="footer">
-            <p>© 2026 SPP Management System. All rights reserved.</p>
-            <div class="footer-links">
-                <span> Dibuat dengan cinta untuk pendidikan Indonesia</span>
+    <section id="stats" class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Sekolah</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Siswa</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1M+</div>
+                <div class="stat-label">Transaksi</div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section id="login" class="login-section">
+        <div class="section-header">
+            <span class="hero-badge">Portal Akses</span>
+            <h2>Pilih Portal Login</h2>
+            <p>Silakan masuk sesuai dengan hak akses Anda</p>
+        </div>
+        <div class="login-grid">
+            <a href="{{ route('login.form') }}" class="login-card">
+                <div class="feature-icon"><i class="fas fa-user-tie"></i></div>
+                <h3>Portal Petugas</h3>
+                <p>Kelola data siswa dan transaksi harian.</p>
+                <span class="btn btn-primary" style="margin-top:20px">Masuk Petugas</span>
+            </a>
+
+            <a href="{{ route('siswa.login.form') }}" class="login-card">
+                <div class="feature-icon"><i class="fas fa-user-graduate"></i></div>
+                <h3>Portal Siswa</h3>
+                <p>Cek riwayat dan status pembayaran Anda.</p>
+                <span class="btn btn-primary" style="margin-top:20px">Masuk Siswa</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="faq" class="faq">
+        <div class="section-header">
+            <span class="hero-badge">FAQ</span>
+            <h2>Pertanyaan Sering Diajukan</h2>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Bagaimana cara melakukan pembayaran?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">Login ke portal siswa, pilih tagihan, dan lakukan konfirmasi pembayaran kepada petugas TU.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Apakah data saya aman?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">Kami menggunakan enkripsi standar industri untuk menjamin keamanan data transaksi sekolah.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="logo" style="margin-bottom: 20px;">
+                    <i class="fas fa-wallet"></i>
+                    <span>SPP System</span>
+                </div>
+                <ul>
+                    <li><a href="#">Enterprise Solution</a></li>
+                    <li><a href="#">Mobile App</a></li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#features">Fitur</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#login">Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Stay Connected</h3>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Email Anda">
+                    <button>Ikuti</button>
+                </div>
+                <p style="margin-top:20px; font-size: 14px;">Jakarta Pusat, Office 9B Tower</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 SPP Management System. Dibuat untuk Pendidikan Indonesia.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Script untuk FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>
