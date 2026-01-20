@@ -84,6 +84,7 @@
             </tbody>
         </table>
 
+        @if(session('petugas')->level == 'admin')
         <div class="form-actions">
             <a href="{{ route('siswa.edit', $siswa->id) }}" class="btn-primary">
                 <i class="fas fa-edit"></i> Edit
@@ -96,6 +97,7 @@
                 </button>
             </form>
         </div>
+        @endif
     </div>
 </div>
 @endsection

@@ -31,6 +31,7 @@
             </tr>
         </table>
 
+        @if(session('petugas')->level == 'admin')
         <div class="form-actions">
             <a href="{{ route('spp.edit', $spp->id_spp) }}" class="btn-primary">
                 <i class="fas fa-edit"></i> Edit
@@ -43,6 +44,7 @@
                 </button>
             </form>
         </div>
+        @endif
     </div>
 </div>
 @endsection

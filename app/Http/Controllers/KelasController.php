@@ -33,25 +33,25 @@ class KelasController extends Controller
         return redirect()->route('kelas.index')->with('success', 'Data Kelas berhasil ditambahkan!');
     }
 
-    public function show(Kelas $kela)
+    public function show(Kelas $kelas)
     {
-        $kela->load('siswa');
-        return view('kelas.show', compact('kela'));
+        $kelas->load('siswa');
+        return view('kelas.show', compact('kelas'));
     }
 
-    public function edit(Kelas $kela)
+    public function edit(Kelas $kelas)
     {
-        return view('kelas.edit', compact('kela'));
+        return view('kelas.edit', compact('kelas'));
     }
 
-    public function update(Request $request, Kelas $kela)
+    public function update(Request $request, Kelas $kelas)
     {
         $request->validate([
             'nama_kelas' => 'required|string|max:10',
             'kompetensi_keahlian' => 'required|string|max:50',
         ]);
 
-        $kela->update([
+        $kelas->update([
             'nama_kelas' => $request->nama_kelas,
             'kompetensi_keahlian' => $request->kompetensi_keahlian,
         ]);
@@ -59,10 +59,10 @@ class KelasController extends Controller
         return redirect()->route('kelas.index')->with('success', 'Data Kelas berhasil diupdate!');
     }
 
-    public function destroy(Kelas $kela)
+    public function destroy(Kelas $kelas)
     {
         try {
-            $kela->delete();
+            $kelas->delete();
             return redirect()->route('kelas.index')->with('success', 'Data Kelas berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->route('kelas.index')->with('error', 'Data Kelas tidak dapat dihapus karena masih ada siswa!');

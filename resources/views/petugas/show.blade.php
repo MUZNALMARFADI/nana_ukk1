@@ -89,7 +89,8 @@
         </div>
         @endif
 
-        <div class="form-actions">
+        @if(session('petugas')->level == 'admin')
+        <div class="form-actions" style="margin-top: 30px;">
             <a href="{{ route('petugas.edit', $petuga->id_petugas) }}" class="btn-primary">
                 <i class="fas fa-edit"></i> Edit
             </a>
@@ -103,6 +104,7 @@
             </form>
             @endif
         </div>
+        @endif
     </div>
 </div>
 
@@ -131,6 +133,10 @@
 
 .badge i {
     font-size: 12px;
+}
+
+.text-muted {
+    color: #7f8c8d;
 }
 </style>
 @endsection

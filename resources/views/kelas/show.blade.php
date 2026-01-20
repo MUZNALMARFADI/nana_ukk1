@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="content-header">
-    <h1>👁️ Detail Data Kelas</h1>
+    <h1><i class="fas fa-eye"></i> Detail Data Kelas</h1>
     <a href="{{ route('kelas.index') }}" class="btn-back">
-        <i>⬅️</i> Kembali
+        <i class="fas fa-arrow-left"></i> Kembali
     </a>
 </div>
 
@@ -15,19 +15,21 @@
         <table class="detail-table">
             <tr>
                 <th width="200">Nama Kelas</th>
-                <td>{{ $kela->nama_kelas }}</td>
+                <td>{{ $kelas->nama_kelas }}</td>
             </tr>
             <tr>
                 <th>Kompetensi Keahlian</th>
-                <td>{{ $kela->kompetensi_keahlian }}</td>
+                <td>{{ $kelas->kompetensi_keahlian }}</td>
             </tr>
             <tr>
                 <th>Jumlah Siswa</th>
-                <td>{{ $kela->siswa->count() }} siswa</td>
+                <td>{{ $kelas->siswa->count() }} siswa</td>
             </tr>
         </table>
 
-        <h3 style="margin-top: 30px; margin-bottom: 15px;">📋 Daftar Siswa</h3>
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">
+            <i class="fas fa-users"></i> Daftar Siswa
+        </h3>
         <table class="table">
             <thead>
                 <tr>
@@ -38,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($kela->siswa as $index => $siswa)
+                @forelse($kelas->siswa as $index => $siswa)
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $siswa->nisn }}</td>
@@ -53,14 +55,20 @@
             </tbody>
         </table>
 
+        @if(session('petugas')->level == 'admin')
         <div class="form-actions">
-            <a href="{{ route('kelas.edit', $kela->id_kelas) }}" class="btn-primary">✏️ Edit</a>
-            <form action="{{ route('kelas.destroy', $kela->id_kelas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
+            <a href="{{ route('kelas.edit', $kelas->id_kelas) }}" class="btn-primary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <form action="{{ route('kelas.destroy', $kelas->id_kelas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn-danger">🗑️ Hapus</button>
+                <button type="submit" class="btn-danger">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                </button>
             </form>
         </div>
+        @endif
     </div>
 </div>
 @endsection
