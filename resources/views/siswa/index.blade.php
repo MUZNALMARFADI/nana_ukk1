@@ -29,6 +29,30 @@
 
 <div class="card">
     <div class="card-body">
+        <!-- Search Box -->
+        <div class="search-box">
+            <form action="{{ route('siswa.index') }}" method="GET">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        name="search" 
+                        class="search-input" 
+                        placeholder="Cari berdasarkan NISN, NIS, atau Nama siswa..."
+                        value="{{ request('search') }}"
+                    >
+                    @if(request('search'))
+                    <a href="{{ route('siswa.index') }}" class="btn-clear">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    @endif
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i> Cari
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -74,7 +98,13 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center">Belum ada data siswa</td>
+                        <td colspan="7" class="text-center">
+                            @if(request('search'))
+                                Tidak ada hasil untuk pencarian "{{ request('search') }}"
+                            @else
+                                Belum ada data siswa
+                            @endif
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -82,4 +112,118 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Search Box Styles */
+    .search-box {
+        margin-bottom: 24px;
+        padding: 20px;
+        background: #f8fdf9;
+        border-radius: 12px;
+        border: 1px solid #e8f5e9;
+    }
+
+    .search-input-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        max-width: 700px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 16px;
+        color: #95a5a6;
+        font-size: 16px;
+        z-index: 1;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 12px 16px 12px 45px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #52be80;
+        box-shadow: 0 0 0 3px rgba(82, 190, 128, 0.1);
+    }
+
+    .search-input::placeholder {
+        color: #bdc3c7;
+    }
+
+    .btn-search {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #52be80 0%, #27ae60 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .btn-search:hover {
+        background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(82, 190, 128, 0.3);
+    }
+
+    .btn-search:active {
+        transform: translateY(0);
+    }
+
+    .btn-clear {
+        position: absolute;
+        right: 140px;
+        padding: 8px 12px;
+        background: #e74c3c;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-clear:hover {
+        background: #c0392b;
+        transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .search-input-group {
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            width: 100%;
+            padding-right: 45px;
+        }
+
+        .btn-search {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-clear {
+            right: 16px;
+        }
+    }
+</style>
 @endsection

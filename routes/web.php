@@ -58,10 +58,10 @@ Route::middleware('admin')->group(function () {
 
     // CRUD SPP
     Route::get('/spp/create', [SppController::class, 'create'])->name('spp.create');
-    Route::post('/spp', [SppController::class, 'store'])->name('spp.store');
-    Route::get('/spp/{spp}/edit', [SppController::class, 'edit'])->name('spp.edit');
-    Route::put('/spp/{spp}', [SppController::class, 'update'])->name('spp.update');
-    Route::delete('/spp/{spp}', [SppController::class, 'destroy'])->name('spp.destroy');
+        Route::post('/spp', [SppController::class, 'store'])->name('spp.store');
+        Route::get('/spp/{spp}/edit', [SppController::class, 'edit'])->name('spp.edit');
+        Route::put('/spp/{spp}', [SppController::class, 'update'])->name('spp.update');
+        Route::delete('/spp/{spp}', [SppController::class, 'destroy'])->name('spp.destroy');
 
     // CRUD PETUGAS
     Route::resource('petugas', PetugasController::class);

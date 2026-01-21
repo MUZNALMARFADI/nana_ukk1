@@ -9,9 +9,22 @@ use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $siswa = Siswa::with(['kelas', 'spp'])->orderBy('nama')->get();
+        $query = Siswa::with(['kelas', 'spp']);
+        
+        // Fitur Pencarian
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nisn', 'like', '%' . $search . '%')
+                  ->orWhere('nis', 'like', '%' . $search . '%')
+                  ->orWhere('nama', 'like', '%' . $search . '%');
+            });
+        }
+        
+        $siswa = $query->orderBy('nama')->get();
+        
         return view('siswa.index', compact('siswa'));
     }
 

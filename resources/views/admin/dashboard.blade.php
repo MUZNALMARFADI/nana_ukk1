@@ -51,12 +51,12 @@
             <i class="fas fa-chart-pie"></i> Ringkasan Sistem
         </h2>
         <p style="color: #7f8c8d; margin-bottom: 30px; line-height: 1.6;">
-            <i class="fas fa-hand-sparkles" style="color: #52be80;"></i> Selamat datang di Sistem Manajemen Pembayaran SPP. Gunakan menu di sebelah kiri untuk navigasi.
+            <i class="fas fa-hand-sparkles" style="color: #52be80;"></i> Selamat datang di Sistem Manajemen Pembayaran SPP. Gunakan menu di bawah untuk navigasi cepat.
         </p>
 
         <div class="menu-grid">
             <a href="{{ route('siswa.index') }}" class="menu-card">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #d5f4e6 0%, #abebc6 100%);">
+                <div class="menu-icon blue-gradient">
                     <i class="fas fa-users"></i>
                 </div>
                 <strong>Kelola Siswa</strong>
@@ -64,7 +64,7 @@
             </a>
 
             <a href="{{ route('pembayaran.index') }}" class="menu-card">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #fef9e7 0%, #f9e79f 100%);">
+                <div class="menu-icon yellow-gradient">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </div>
                 <strong>Pembayaran SPP</strong>
@@ -72,7 +72,7 @@
             </a>
 
             <a href="{{ route('kelas.index') }}" class="menu-card">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #abebc6 0%, #52be80 100%);">
+                <div class="menu-icon green-gradient">
                     <i class="fas fa-chalkboard"></i>
                 </div>
                 <strong>Data Kelas</strong>
@@ -80,7 +80,7 @@
             </a>
 
             <a href="{{ route('spp.index') }}" class="menu-card">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #f9e79f 0%, #f4d03f 100%);">
+                <div class="menu-icon orange-gradient">
                     <i class="fas fa-coins"></i>
                 </div>
                 <strong>Kelola SPP</strong>
@@ -91,20 +91,107 @@
 </div>
 
 <style>
+    /* Stats Grid - 2x2 Layout */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-bottom: 30px;
+        max-width: 1200px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e8f5e9;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(39, 174, 96, 0.15);
+        border-color: #52be80;
+    }
+
+    .stat-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: white;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-icon {
+        transform: scale(1.08);
+    }
+
+    .stat-icon.blue {
+        background: linear-gradient(135deg, #52be80 0%, #27ae60 100%);
+        box-shadow: 0 4px 12px rgba(82, 190, 128, 0.3);
+    }
+
+    .stat-icon.green {
+        background: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%);
+        box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+    }
+
+    .stat-icon.orange {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
+
+    .stat-icon.purple {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+
+    .stat-info {
+        flex: 1;
+    }
+
+    .stat-info h3 {
+        font-size: 13px;
+        color: #95a5a6;
+        margin: 0 0 6px 0;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-info p {
+        font-size: 26px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    /* Menu Grid - 2x2 Layout */
     .menu-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
+        max-width: 1200px;
     }
 
     .menu-card {
-        padding: 25px 20px;
+        padding: 28px 20px;
         background: white;
-        border: 2px solid #d5f4e6;
-        border-radius: 12px;
+        border: 2px solid #e8f5e9;
+        border-radius: 16px;
         text-align: center;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
     }
@@ -116,7 +203,7 @@
         left: 0;
         width: 100%;
         height: 4px;
-        background: linear-gradient(90deg, #52be80 0%, #f9e79f 100%);
+        background: linear-gradient(90deg, #52be80 0%, #27ae60 100%);
         transform: scaleX(0);
         transition: transform 0.3s ease;
     }
@@ -126,129 +213,99 @@
     }
 
     .menu-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 30px rgba(82, 190, 128, 0.2);
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(39, 174, 96, 0.15);
         border-color: #52be80;
     }
 
     .menu-icon {
-        width: 70px;
-        height: 70px;
-        margin: 0 auto 15px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 30px;
-        color: white;
-        transition: all 0.3s ease;
-    }
-
-    .menu-card:hover .menu-icon {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 8px 20px rgba(82, 190, 128, 0.3);
-    }
-
-    .menu-card strong {
-        display: block;
-        color: #27ae60;
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
-
-    .menu-card p {
-        color: #7f8c8d;
-        font-size: 13px;
-        margin: 0;
-    }
-
-    /* Stat Cards Update */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .stat-card {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(82, 190, 128, 0.1);
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(82, 190, 128, 0.15);
-        border-color: #d5f4e6;
-    }
-
-    .stat-icon {
-        width: 70px;
-        height: 70px;
-        border-radius: 12px;
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 18px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 32px;
         color: white;
-        flex-shrink: 0;
         transition: all 0.3s ease;
     }
 
-    .stat-card:hover .stat-icon {
-        transform: scale(1.1) rotate(-5deg);
-    }
-
-    .stat-icon.blue {
-        background: linear-gradient(135deg, #abebc6 0%, #52be80 100%);
-        box-shadow: 0 4px 15px rgba(82, 190, 128, 0.3);
-    }
-
-    .stat-icon.green {
-        background: linear-gradient(135deg, #f9e79f 0%, #f4d03f 100%);
-        box-shadow: 0 4px 15px rgba(249, 231, 159, 0.3);
-    }
-
-    .stat-icon.orange {
+    .menu-icon.blue-gradient {
         background: linear-gradient(135deg, #52be80 0%, #27ae60 100%);
-        box-shadow: 0 4px 15px rgba(82, 190, 128, 0.4);
+        box-shadow: 0 6px 16px rgba(82, 190, 128, 0.25);
     }
 
-    .stat-icon.purple {
+    .menu-icon.yellow-gradient {
         background: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%);
-        box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        box-shadow: 0 6px 16px rgba(243, 156, 18, 0.25);
     }
 
-    .stat-info h3 {
-        font-size: 14px;
-        color: #7f8c8d;
+    .menu-icon.green-gradient {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        box-shadow: 0 6px 16px rgba(52, 152, 219, 0.25);
+    }
+
+    .menu-icon.orange-gradient {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        box-shadow: 0 6px 16px rgba(231, 76, 60, 0.25);
+    }
+
+    .menu-card:hover .menu-icon {
+        transform: scale(1.1) rotate(3deg);
+    }
+
+    .menu-card strong {
+        display: block;
+        color: #2c3e50;
+        font-size: 17px;
         margin-bottom: 8px;
-        font-weight: 500;
+        font-weight: 600;
     }
 
-    .stat-info p {
-        font-size: 28px;
-        font-weight: bold;
-        color: #27ae60;
+    .menu-card p {
+        color: #95a5a6;
+        font-size: 13px;
         margin: 0;
+        line-height: 1.4;
     }
 
+    /* Card */
     .card {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(82, 190, 128, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         overflow: hidden;
-        border: 2px solid #d5f4e6;
+        border: 1px solid #e8f5e9;
     }
 
     .card-body {
-        padding: 30px;
+        padding: 32px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .menu-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .menu-card {
+            padding: 24px 16px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
     }
 </style>
 @endsection
