@@ -254,38 +254,6 @@
             font-size: 13px;
         }
 
-        .demo-info {
-            background: linear-gradient(135deg, #fff9e6 0%, #fef9e7 100%);
-            padding: 18px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #d4ac0d;
-            border: 1px solid #f9e79f;
-            box-shadow: 0 4px 15px rgba(249, 231, 159, 0.2);
-        }
-
-        .demo-info strong {
-            display: block;
-            margin-bottom: 10px;
-            color: #b7950b;
-            font-size: 14px;
-        }
-
-        .demo-info p {
-            margin: 8px 0;
-            color: #7d6608;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .demo-info i {
-            color: #52be80;
-            font-size: 14px;
-            margin-top: 2px;
-        }
-
         .link-petugas {
             text-align: center;
             margin-top: 20px;
@@ -401,12 +369,6 @@
                     <i class="fas fa-sign-in-alt"></i> <span>Login Sekarang</span>
                 </button>
             </form>
-
-            <div class="demo-info">
-                <strong><i class="fas fa-info-circle"></i> Informasi Login:</strong>
-                <p><i class="fas fa-arrow-right"></i> <span>Gunakan NISN dan NIS Anda untuk login</span></p>
-                <p><i class="fas fa-arrow-right"></i> <span>Contoh: NISN: 9925000001, NIS: 20250001</span></p>
-            </div>
 
             <div class="link-petugas">
                 <p><i class="fas fa-user-tie"></i> Login sebagai petugas? <a href="{{ route('login.form') }}">Klik disini <i class="fas fa-arrow-right"></i></a></p>

@@ -41,14 +41,16 @@
                         placeholder="Cari berdasarkan NISN, NIS, atau Nama siswa..."
                         value="{{ request('search') }}"
                     >
-                    @if(request('search'))
-                    <a href="{{ route('siswa.index') }}" class="btn-clear">
-                        <i class="fas fa-times"></i>
-                    </a>
-                    @endif
-                    <button type="submit" class="btn-search">
-                        <i class="fas fa-search"></i> Cari
-                    </button>
+                    <div class="search-buttons">
+                        @if(request('search'))
+                        <a href="{{ route('siswa.index') }}" class="btn-clear" title="Hapus Pencarian">
+                            <i class="fas fa-times"></i>
+                        </a>
+                        @endif
+                        <button type="submit" class="btn-search">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -100,9 +102,18 @@
                     <tr>
                         <td colspan="7" class="text-center">
                             @if(request('search'))
-                                Tidak ada hasil untuk pencarian "{{ request('search') }}"
+                                <div style="padding: 20px;">
+                                    <i class="fas fa-search" style="font-size: 48px; color: #bdc3c7; margin-bottom: 10px;"></i>
+                                    <p style="color: #7f8c8d; font-size: 16px;">Tidak ada hasil untuk pencarian "<strong>{{ request('search') }}</strong>"</p>
+                                    <a href="{{ route('siswa.index') }}" class="btn-search" style="display: inline-block; margin-top: 10px;">
+                                        <i class="fas fa-arrow-left"></i> Kembali ke Semua Data
+                                    </a>
+                                </div>
                             @else
-                                Belum ada data siswa
+                                <div style="padding: 20px;">
+                                    <i class="fas fa-inbox" style="font-size: 48px; color: #bdc3c7; margin-bottom: 10px;"></i>
+                                    <p style="color: #7f8c8d; font-size: 16px;">Belum ada data siswa</p>
+                                </div>
                             @endif
                         </td>
                     </tr>
@@ -128,7 +139,7 @@
         align-items: center;
         gap: 12px;
         position: relative;
-        max-width: 700px;
+        max-width: 800px;
     }
 
     .search-icon {
@@ -159,6 +170,12 @@
         color: #bdc3c7;
     }
 
+    .search-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
     .btn-search {
         padding: 12px 24px;
         background: linear-gradient(135deg, #52be80 0%, #27ae60 100%);
@@ -186,18 +203,17 @@
     }
 
     .btn-clear {
-        position: absolute;
-        right: 140px;
-        padding: 8px 12px;
+        padding: 10px 14px;
         background: #e74c3c;
         color: white;
         border-radius: 6px;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 14px;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
 
     .btn-clear:hover {
@@ -208,21 +224,22 @@
     /* Responsive */
     @media (max-width: 768px) {
         .search-input-group {
-            flex-wrap: wrap;
+            flex-direction: column;
         }
 
         .search-input {
             width: 100%;
-            padding-right: 45px;
         }
 
-        .btn-search {
+        .search-buttons {
             width: 100%;
-            justify-content: center;
+            justify-content: stretch;
         }
 
+        .btn-search,
         .btn-clear {
-            right: 16px;
+            flex: 1;
+            justify-content: center;
         }
     }
 </style>

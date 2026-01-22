@@ -6,15 +6,19 @@ use App\Models\Pembayaran;
 use App\Models\Siswa;
 use App\Models\Spp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
+    /**
+     * Menampilkan daftar transaksi (Index)
+     */
     public function index(Request $request)
     {
         $query = Pembayaran::with(['siswa', 'petugas', 'spp']);
 
-        // Filter berdasarkan pencarian
-        if ($request->has('search') && $request->search != '') {
+        // Filter Pencarian
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->whereHas('siswa', function($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
@@ -22,26 +26,22 @@ class PembayaranController extends Controller
             });
         }
 
-        // Filter berdasarkan bulan
-        if ($request->has('bulan') && $request->bulan != '') {
-            $query->where('bulan_dibayar', $request->bulan);
-        }
-
-        // Filter berdasarkan tahun
-        if ($request->has('tahun') && $request->tahun != '') {
-            $query->where('tahun_dibayar', $request->tahun);
-        }
+        // Filter Bulan & Tahun
+        if ($request->filled('bulan')) $query->where('bulan_dibayar', $request->bulan);
+        if ($request->filled('tahun')) $query->where('tahun_dibayar', $request->tahun);
 
         $pembayaran = $query->orderBy('tgl_bayar', 'desc')->paginate(10);
         
         return view('pembayaran.index', compact('pembayaran'));
     }
 
+    /**
+     * Form Tambah Pembayaran (Create)
+     */
     public function create()
     {
         $siswa = Siswa::with(['kelas', 'spp'])->orderBy('nama')->get();
         $spp = Spp::orderBy('tahun', 'desc')->get();
-        
         $bulan = [
             'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
@@ -50,106 +50,106 @@ class PembayaranController extends Controller
         return view('pembayaran.create', compact('siswa', 'spp', 'bulan'));
     }
 
+    /**
+     * Proses Simpan (Store) - Mendukung Single & Multiple
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'nisn' => 'required|exists:siswa,nisn',
-            'tgl_bayar' => 'required|date',
-            'bulan_dibayar' => 'required|string|max:8',
+            'nisn'          => 'required|exists:siswa,nisn',
+            'tgl_bayar'     => 'required|date',
             'tahun_dibayar' => 'required|string|size:4',
-            'id_spp' => 'required|exists:spp,id_spp',
-            'jumlah_bayar' => 'required|integer|min:0',
+            'id_spp'        => 'required|exists:spp,id_spp',
+            'jumlah_bayar'  => 'required|integer|min:0',
+            'tipe_bayar'    => 'required|in:single,multiple',
         ]);
 
-        // Cek apakah sudah pernah bayar di bulan dan tahun yang sama
-        $cekDuplikat = Pembayaran::where('nisn', $request->nisn)
-                                 ->where('bulan_dibayar', $request->bulan_dibayar)
-                                 ->where('tahun_dibayar', $request->tahun_dibayar)
-                                 ->exists();
+        $id_petugas = session('petugas')->id_petugas;
+        $tipeBayar  = $request->input('tipe_bayar');
 
-        if ($cekDuplikat) {
-            return back()->with('error', 'Siswa sudah melakukan pembayaran untuk bulan ini!')->withInput();
-        }
+        return DB::transaction(function () use ($request, $tipeBayar, $id_petugas) {
+            if ($tipeBayar === 'single') {
+                $request->validate(['bulan_dibayar_single' => 'required']);
+                $bulan = $request->bulan_dibayar_single;
 
-        Pembayaran::create([
-            'id_petugas' => session('petugas')->id_petugas,
-            'nisn' => $request->nisn,
-            'tgl_bayar' => $request->tgl_bayar,
-            'bulan_dibayar' => $request->bulan_dibayar,
-            'tahun_dibayar' => $request->tahun_dibayar,
-            'id_spp' => $request->id_spp,
-            'jumlah_bayar' => $request->jumlah_bayar,
-        ]);
+                if (Pembayaran::where(['nisn' => $request->nisn, 'bulan_dibayar' => $bulan, 'tahun_dibayar' => $request->tahun_dibayar])->exists()) {
+                    return back()->with('error', "Bulan $bulan sudah dibayar!")->withInput();
+                }
 
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil ditambahkan!');
+                Pembayaran::create([
+                    'id_petugas' => $id_petugas,
+                    'nisn' => $request->nisn,
+                    'tgl_bayar' => $request->tgl_bayar,
+                    'bulan_dibayar' => $bulan,
+                    'tahun_dibayar' => $request->tahun_dibayar,
+                    'id_spp' => $request->id_spp,
+                    'jumlah_bayar' => $request->jumlah_bayar,
+                ]);
+            } else {
+                $request->validate(['bulan_multiple' => 'required|array']);
+                $spp = Spp::find($request->id_spp);
+                foreach ($request->bulan_multiple as $bln) {
+                    if (!Pembayaran::where(['nisn' => $request->nisn, 'bulan_dibayar' => $bln, 'tahun_dibayar' => $request->tahun_dibayar])->exists()) {
+                        Pembayaran::create([
+                            'id_petugas' => $id_petugas,
+                            'nisn' => $request->nisn,
+                            'tgl_bayar' => $request->tgl_bayar,
+                            'bulan_dibayar' => $bln,
+                            'tahun_dibayar' => $request->tahun_dibayar,
+                            'id_spp' => $request->id_spp,
+                            'jumlah_bayar' => $spp->nominal,
+                        ]);
+                    }
+                }
+            }
+            return redirect()->route('pembayaran.index')->with('success', 'Transaksi Berhasil!');
+        });
     }
 
-    public function show(Pembayaran $pembayaran)
+    /**
+     * Menampilkan Detail Pembayaran (Show)
+     */
+    public function show($id)
     {
-        $pembayaran->load(['siswa.kelas', 'petugas', 'spp']);
+        $pembayaran = Pembayaran::with(['siswa.kelas', 'petugas', 'spp'])->findOrFail($id);
         return view('pembayaran.show', compact('pembayaran'));
     }
 
-    public function edit(Pembayaran $pembayaran)
+    /**
+     * Form Edit Pembayaran (Edit)
+     */
+    public function edit($id)
     {
-        $siswa = Siswa::with(['kelas', 'spp'])->orderBy('nama')->get();
-        $spp = Spp::orderBy('tahun', 'desc')->get();
-        
-        $bulan = [
-            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-        ];
+        $pembayaran = Pembayaran::findOrFail($id);
+        $siswa = Siswa::all();
+        $spp = Spp::all();
+        $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         
         return view('pembayaran.edit', compact('pembayaran', 'siswa', 'spp', 'bulan'));
     }
 
-    public function update(Request $request, Pembayaran $pembayaran)
+    /**
+     * Proses Update Data (Update)
+     */
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'nisn' => 'required|exists:siswa,nisn',
-            'tgl_bayar' => 'required|date',
-            'bulan_dibayar' => 'required|string|max:8',
-            'tahun_dibayar' => 'required|string|size:4',
-            'id_spp' => 'required|exists:spp,id_spp',
-            'jumlah_bayar' => 'required|integer|min:0',
+            'tgl_bayar'     => 'required|date',
+            'jumlah_bayar'  => 'required|integer',
         ]);
 
-        // Cek duplikat kecuali data yang sedang diedit
-        $cekDuplikat = Pembayaran::where('nisn', $request->nisn)
-                                 ->where('bulan_dibayar', $request->bulan_dibayar)
-                                 ->where('tahun_dibayar', $request->tahun_dibayar)
-                                 ->where('id_pembayaran', '!=', $pembayaran->id_pembayaran)
-                                 ->exists();
+        $pembayaran = Pembayaran::findOrFail($id);
+        $pembayaran->update($request->only(['tgl_bayar', 'jumlah_bayar']));
 
-        if ($cekDuplikat) {
-            return back()->with('error', 'Siswa sudah melakukan pembayaran untuk bulan ini!')->withInput();
-        }
-
-        $pembayaran->update([
-            'nisn' => $request->nisn,
-            'tgl_bayar' => $request->tgl_bayar,
-            'bulan_dibayar' => $request->bulan_dibayar,
-            'tahun_dibayar' => $request->tahun_dibayar,
-            'id_spp' => $request->id_spp,
-            'jumlah_bayar' => $request->jumlah_bayar,
-        ]);
-
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil diupdate!');
+        return redirect()->route('pembayaran.index')->with('success', 'Data diperbarui!');
     }
 
-    public function destroy(Pembayaran $pembayaran)
+    /**
+     * Hapus Data (Destroy)
+     */
+    public function destroy($id)
     {
-        $pembayaran->delete();
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus!');
-    }
-
-    // Method tambahan untuk get data siswa (AJAX)
-    public function getSiswa($nisn)
-    {
-        $siswa = Siswa::with(['kelas', 'spp'])
-                     ->where('nisn', $nisn)
-                     ->first();
-        
-        return response()->json($siswa);
+        Pembayaran::findOrFail($id)->delete();
+        return redirect()->route('pembayaran.index')->with('success', 'Data dihapus!');
     }
 }

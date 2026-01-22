@@ -254,37 +254,6 @@
             font-size: 13px;
         }
 
-        .demo-info {
-            background: linear-gradient(135deg, #fef9e7 0%, #fff9e6 100%);
-            padding: 18px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #d4ac0d;
-            border: 1px solid #f9e79f;
-            box-shadow: 0 4px 15px rgba(249, 231, 159, 0.2);
-        }
-
-        .demo-info strong {
-            display: block;
-            margin-bottom: 10px;
-            color: #b7950b;
-            font-size: 14px;
-        }
-
-        .demo-info p {
-            margin: 8px 0;
-            color: #7d6608;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .demo-info i {
-            color: #52be80;
-            font-size: 14px;
-        }
-
         .password-toggle {
             position: absolute;
             right: 15px;
@@ -387,12 +356,6 @@
                     <i class="fas fa-sign-in-alt"></i> <span>Login Sekarang</span>
                 </button>
             </form>
-
-            <div class="demo-info">
-                <strong><i class="fas fa-key"></i> Demo Login:</strong>
-                <p><i class="fas fa-user-shield"></i> <strong>Admin:</strong> admin / admin123</p>
-                <p><i class="fas fa-user-tie"></i> <strong>Petugas:</strong> petugas1 / petugas123</p>
-            </div>
         </div>
 
         <div class="login-footer">
