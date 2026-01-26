@@ -48,14 +48,14 @@ class SiswaAuthController extends Controller
         return back()->with('error', 'NISN atau NIS tidak ditemukan!')->withInput();
     }
 
-    // Proses logout siswa
+    // Proses logout siswa - REDIRECT KE LANDING PAGE
     public function logout(Request $request)
     {
         Session::forget('siswa');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect()->route('siswa.login.form')
-                       ->with('success', 'Logout berhasil!');
+        // REDIRECT KE LANDING PAGE (root URL)
+        return redirect('/')->with('success', 'Logout berhasil!');
     }
 }

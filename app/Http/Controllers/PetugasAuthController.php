@@ -43,13 +43,14 @@ class PetugasAuthController extends Controller
         return back()->with('error', 'Username atau password salah!')->withInput();
     }
 
-    // Proses logout
+    // Proses logout - REDIRECT KE LANDING PAGE
     public function logout(Request $request)
     {
         Session::forget('petugas');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect()->route('login.form')->with('success', 'Logout berhasil!');
+        // REDIRECT KE LANDING PAGE (root URL)
+        return redirect('/')->with('success', 'Logout berhasil!');
     }
 }

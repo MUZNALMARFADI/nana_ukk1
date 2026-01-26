@@ -86,18 +86,90 @@
 
         @if(session('petugas')->level == 'admin')
         <div class="form-actions">
-            <a href="{{ route('siswa.edit', $siswa->id) }}" class="btn-primary">
-                <i class="fas fa-edit"></i> Edit
+            <a href="{{ route('siswa.edit', $siswa->id) }}" class="btn-warning">
+                <i class="fas fa-edit"></i> Edit Data
             </a>
-            <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
+            <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete(event)">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn-danger">
-                    <i class="fas fa-trash-alt"></i> Hapus
+                <button type="submit" class="btn-danger-soft">
+                    <i class="fas fa-trash-alt"></i> Hapus Data
                 </button>
             </form>
         </div>
         @endif
     </div>
 </div>
+
+<style>
+/* Button Warning (Kuning) - untuk Edit */
+.btn-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #f9e79f 0%, #f4d03f 100%);
+    color: #7d6608;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(249, 231, 159, 0.35);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #f4d03f 0%, #f1c40f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(249, 231, 159, 0.45);
+    color: #6c5a05;
+}
+
+.btn-warning:active {
+    transform: translateY(0);
+}
+
+/* Button Danger Soft (Merah Lembut) - untuk Hapus */
+.btn-danger-soft {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #fadbd8 0%, #f5b7b1 100%);
+    color: #922b21;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 2px solid #f5b7b1;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-danger-soft:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.35);
+}
+
+.btn-danger-soft:active {
+    transform: translateY(0);
+}
+</style>
+
+<script>
+function confirmDelete(event) {
+    event.preventDefault();
+    
+    if (confirm('⚠️ Yakin ingin menghapus data siswa ini?\n\nData yang terhapus tidak dapat dikembalikan!')) {
+        event.target.submit();
+    }
+    
+    return false;
+}
+</script>
 @endsection

@@ -24,6 +24,96 @@
             line-height: 1.6;
         }
 
+        /* ========== ALERT NOTIFICATION STYLES ========== */
+        .alert-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #d5f4e6;
+            color: #1e8449;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(46, 125, 50, 0.25);
+            z-index: 9999;
+            border: 2px solid #abebc6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .alert-notification.error {
+            background: #fadbd8;
+            color: #922b21;
+            border-color: #f5b7b1;
+        }
+
+        .alert-notification i {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-notification .alert-close {
+            margin-left: auto;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 18px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-notification .alert-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .alert-notification.hiding {
+            animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Responsive Alert */
+        @media (max-width: 768px) {
+            .alert-notification {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                max-width: none;
+            }
+        }
+
         /* NAVBAR */
         .navbar {
             position: fixed;
@@ -291,6 +381,27 @@
 </head>
 <body>
 
+    <!-- ========== ALERT NOTIFICATION ========== -->
+    @if(session('success'))
+    <div class="alert-notification" id="alertNotification">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ session('success') }}</span>
+        <button class="alert-close" onclick="closeAlert()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert-notification error" id="alertNotification">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ session('error') }}</span>
+        <button class="alert-close" onclick="closeAlert()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    @endif
+
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
@@ -443,6 +554,7 @@
     </footer>
 
     <script>
+        // ========== FAQ ACCORDION SCRIPT ==========
         const faqItems = document.querySelectorAll('.faq-item');
 
         faqItems.forEach(item => {
@@ -457,6 +569,25 @@
                 // Buka/Tutup yang diklik
                 item.classList.toggle('active');
             });
+        });
+
+        // ========== ALERT NOTIFICATION SCRIPT ==========
+        function closeAlert() {
+            const alert = document.getElementById('alertNotification');
+            if (alert) {
+                alert.classList.add('hiding');
+                setTimeout(() => alert.remove(), 300);
+            }
+        }
+
+        // Auto hide alert after 5 seconds
+        window.addEventListener('DOMContentLoaded', function() {
+            const alert = document.getElementById('alertNotification');
+            if (alert) {
+                setTimeout(() => {
+                    closeAlert();
+                }, 5000);
+            }
         });
     </script>
 </body>

@@ -57,18 +57,71 @@
 
         @if(session('petugas')->level == 'admin')
         <div class="form-actions">
-            <a href="{{ route('kelas.edit', $kelas->id_kelas) }}" class="btn-primary">
-                <i class="fas fa-edit"></i> Edit
+            <a href="{{ route('kelas.edit', $kelas->id_kelas) }}" class="btn-edit-detail">
+                <i class="fas fa-edit"></i> Edit Data
             </a>
-            <form action="{{ route('kelas.destroy', $kelas->id_kelas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
+            <form action="{{ route('kelas.destroy', $kelas->id_kelas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus kelas ini?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn-danger">
-                    <i class="fas fa-trash-alt"></i> Hapus
+                <button type="submit" class="btn-delete-detail">
+                    <i class="fas fa-trash-alt"></i> Hapus Data
                 </button>
             </form>
         </div>
         @endif
     </div>
 </div>
+
+<style>
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #e8f5e9;
+}
+
+.btn-edit-detail {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-edit-detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+}
+
+.btn-delete-detail {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-delete-detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+</style>
 @endsection
