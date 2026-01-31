@@ -105,19 +105,23 @@
                 </div>
             </div>
 
-            <!-- FITUR BARU: Pilihan Bayar Single atau Multiple -->
-            <div class="form-group">
+            <!-- FITUR BARU: Pilihan Bayar Single, Multiple, atau Full Year -->
+            <div class="form-group" style="margin-bottom: 25px;">
                 <label>
                     <i class="fas fa-layer-group"></i> Tipe Pembayaran <span class="required">*</span>
                 </label>
-                <div style="display: flex; gap: 20px; margin-top: 10px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <div style="display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 15px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.3s;">
                         <input type="radio" name="tipe_bayar" value="single" id="tipeSingle" checked>
-                        <span>Bayar 1 Bulan</span>
+                        <span><i class="fas fa-calendar-day"></i> Bayar 1 Bulan</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 15px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.3s;">
                         <input type="radio" name="tipe_bayar" value="multiple" id="tipeMultiple">
-                        <span>Bayar Beberapa Bulan Sekaligus</span>
+                        <span><i class="fas fa-calendar-week"></i> Bayar Beberapa Bulan</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 15px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.3s;">
+                        <input type="radio" name="tipe_bayar" value="full_year" id="tipeFullYear">
+                        <span><i class="fas fa-calendar-alt"></i> Bayar 1 Tahun Penuh (12 Bulan)</span>
                     </label>
                 </div>
             </div>
@@ -158,6 +162,33 @@
                     </small>
                 </div>
             </div>
+
+            <!-- Form untuk Full Year Payment -->
+            <div id="fullYearPayment" style="display: none;">
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 10px 0; color: #856404;">
+                        <i class="fas fa-star"></i> Pembayaran 1 Tahun Penuh
+                    </h4>
+                    <p style="margin: 0; color: #856404;">
+                        <i class="fas fa-check-circle"></i> Anda akan membayar SPP untuk <strong>12 bulan sekaligus</strong> (Januari - Desember)
+                    </p>
+                </div>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 2px solid #3498db;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+                        @foreach($bulan as $b)
+                        <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: #d5f4e6; border-radius: 6px; border: 1px solid #27ae60;">
+                            <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                            <span style="color: #27ae60; font-weight: bold;">{{ $b }}</span>
+                            <!-- Hidden input untuk mengirim data 12 bulan -->
+                            <input type="hidden" name="bulan_full_year[]" value="{{ $b }}" class="bulan-full-year-hidden">
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jarak antara Card Bulan dan Tahun SPP -->
+            <div style="margin: 30px 0;"></div>
 
             <div class="form-group">
                 <label for="id_spp">
@@ -207,12 +238,12 @@
                 @enderror
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn-primary">
+            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="submit" class="btn-primary" style="flex: 0 0 auto; padding: 12px 30px;">
                     <i class="fas fa-save"></i> Simpan Pembayaran
                 </button>
-                <a href="{{ route('pembayaran.index') }}" class="btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Batal
+                <a href="{{ route('pembayaran.index') }}" class="btn-secondary" style="flex: 0 0 auto; padding: 12px 30px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-times"></i> Batal
                 </a>
             </div>
         </form>
@@ -226,11 +257,37 @@
     padding: 0 10px;
 }
 
+.row::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 @media (max-width: 768px) {
     .col-md-6 {
         width: 100%;
         float: none;
     }
+    
+    .form-actions {
+        flex-direction: column !important;
+    }
+    
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        width: 100% !important;
+        justify-content: center;
+    }
+}
+
+/* Radio button styling */
+input[type="radio"]:checked + span {
+    font-weight: bold;
+}
+
+label:has(input[type="radio"]:checked) {
+    background: #d5f4e6 !important;
+    border-color: #27ae60 !important;
 }
 
 /* Checkbox styling */
@@ -242,6 +299,37 @@ input[type="checkbox"]:checked + span {
 label:has(input[type="checkbox"]:checked) {
     background: #d5f4e6 !important;
     border-color: #27ae60 !important;
+}
+
+/* Button styling improvements */
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 </style>
 
@@ -255,8 +343,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const tipeSingle = document.getElementById('tipeSingle');
     const tipeMultiple = document.getElementById('tipeMultiple');
+    const tipeFullYear = document.getElementById('tipeFullYear');
     const singlePayment = document.getElementById('singlePayment');
     const multiplePayment = document.getElementById('multiplePayment');
+    const fullYearPayment = document.getElementById('fullYearPayment');
     const bulanCheckboxes = document.querySelectorAll('.bulan-checkbox');
     const infoPembayaran = document.getElementById('infoPembayaran');
 
@@ -303,25 +393,50 @@ document.addEventListener('DOMContentLoaded', function() {
         calculateTotal();
     });
 
-    // Toggle payment type
+    // Toggle payment type - Single
     tipeSingle.addEventListener('change', function() {
         if (this.checked) {
             singlePayment.style.display = 'block';
             multiplePayment.style.display = 'none';
+            fullYearPayment.style.display = 'none';
             document.getElementById('bulan_dibayar_single').required = true;
+            
+            // Uncheck all checkboxes
             bulanCheckboxes.forEach(cb => {
                 cb.checked = false;
                 cb.required = false;
             });
+            
             calculateTotal();
         }
     });
 
+    // Toggle payment type - Multiple
     tipeMultiple.addEventListener('change', function() {
         if (this.checked) {
             singlePayment.style.display = 'none';
             multiplePayment.style.display = 'block';
+            fullYearPayment.style.display = 'none';
             document.getElementById('bulan_dibayar_single').required = false;
+            
+            calculateTotal();
+        }
+    });
+
+    // Toggle payment type - Full Year
+    tipeFullYear.addEventListener('change', function() {
+        if (this.checked) {
+            singlePayment.style.display = 'none';
+            multiplePayment.style.display = 'none';
+            fullYearPayment.style.display = 'block';
+            document.getElementById('bulan_dibayar_single').required = false;
+            
+            // Uncheck multiple checkboxes
+            bulanCheckboxes.forEach(cb => {
+                cb.checked = false;
+                cb.required = false;
+            });
+            
             calculateTotal();
         }
     });
@@ -347,11 +462,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 jumlahBulan = 1;
                 totalBayar = nominalPerBulan;
             }
-        } else {
+        } else if (tipeMultiple.checked) {
             // Multiple payment
             const checkedBulans = Array.from(bulanCheckboxes).filter(cb => cb.checked);
             jumlahBulan = checkedBulans.length;
             totalBayar = nominalPerBulan * jumlahBulan;
+        } else if (tipeFullYear.checked) {
+            // Full year payment (12 months) - ALWAYS 12 months
+            jumlahBulan = 12;
+            totalBayar = nominalPerBulan * 12;
         }
 
         // Update display
@@ -372,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nisnSelect.dispatchEvent(new Event('change'));
     }
 
-    // Form validation
+    // Form validation and submission
     document.getElementById('formPembayaran').addEventListener('submit', function(e) {
         if (tipeMultiple.checked) {
             const checkedBulans = Array.from(bulanCheckboxes).filter(cb => cb.checked);
@@ -381,6 +500,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Pilih minimal 1 bulan untuk pembayaran!');
                 return false;
             }
+        }
+        
+        // Debug: Log form data before submission
+        if (tipeFullYear.checked) {
+            console.log('Submitting full year payment with 12 months');
         }
     });
 });

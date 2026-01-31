@@ -51,58 +51,152 @@ class PembayaranController extends Controller
     }
 
     /**
-     * Proses Simpan (Store) - Mendukung Single & Multiple
+     * Proses Simpan (Store) - Mendukung Single, Multiple & Full Year
      */
     public function store(Request $request)
     {
+        // Validasi dasar
         $request->validate([
             'nisn'          => 'required|exists:siswa,nisn',
             'tgl_bayar'     => 'required|date',
             'tahun_dibayar' => 'required|string|size:4',
             'id_spp'        => 'required|exists:spp,id_spp',
             'jumlah_bayar'  => 'required|integer|min:0',
-            'tipe_bayar'    => 'required|in:single,multiple',
+            'tipe_bayar'    => 'required|in:single,multiple,full_year',
         ]);
 
         $id_petugas = session('petugas')->id_petugas;
         $tipeBayar  = $request->input('tipe_bayar');
 
         return DB::transaction(function () use ($request, $tipeBayar, $id_petugas) {
+            $spp = Spp::find($request->id_spp);
+            
+            // 1. SINGLE PAYMENT (1 Bulan)
             if ($tipeBayar === 'single') {
                 $request->validate(['bulan_dibayar_single' => 'required']);
                 $bulan = $request->bulan_dibayar_single;
 
-                if (Pembayaran::where(['nisn' => $request->nisn, 'bulan_dibayar' => $bulan, 'tahun_dibayar' => $request->tahun_dibayar])->exists()) {
-                    return back()->with('error', "Bulan $bulan sudah dibayar!")->withInput();
+                // Cek duplikasi
+                if (Pembayaran::where([
+                    'nisn' => $request->nisn, 
+                    'bulan_dibayar' => $bulan, 
+                    'tahun_dibayar' => $request->tahun_dibayar
+                ])->exists()) {
+                    return back()->with('error', "Pembayaran bulan $bulan tahun {$request->tahun_dibayar} sudah ada!")->withInput();
                 }
 
                 Pembayaran::create([
-                    'id_petugas' => $id_petugas,
-                    'nisn' => $request->nisn,
-                    'tgl_bayar' => $request->tgl_bayar,
+                    'id_petugas'    => $id_petugas,
+                    'nisn'          => $request->nisn,
+                    'tgl_bayar'     => $request->tgl_bayar,
                     'bulan_dibayar' => $bulan,
                     'tahun_dibayar' => $request->tahun_dibayar,
-                    'id_spp' => $request->id_spp,
-                    'jumlah_bayar' => $request->jumlah_bayar,
+                    'id_spp'        => $request->id_spp,
+                    'jumlah_bayar'  => $spp->nominal,
                 ]);
-            } else {
-                $request->validate(['bulan_multiple' => 'required|array']);
-                $spp = Spp::find($request->id_spp);
-                foreach ($request->bulan_multiple as $bln) {
-                    if (!Pembayaran::where(['nisn' => $request->nisn, 'bulan_dibayar' => $bln, 'tahun_dibayar' => $request->tahun_dibayar])->exists()) {
+
+                return redirect()->route('pembayaran.index')
+                    ->with('success', 'Pembayaran 1 bulan berhasil disimpan!');
+            } 
+            
+            // 2. MULTIPLE PAYMENT (Beberapa Bulan)
+            elseif ($tipeBayar === 'multiple') {
+                $request->validate([
+                    'bulan_multiple' => 'required|array|min:1',
+                    'bulan_multiple.*' => 'required|string'
+                ]);
+
+                $bulanDibayar = $request->bulan_multiple;
+                $jumlahBulan = count($bulanDibayar);
+                $bulanBerhasil = 0;
+                $bulanGagal = [];
+
+                foreach ($bulanDibayar as $bulan) {
+                    // Cek apakah bulan sudah dibayar
+                    $exists = Pembayaran::where([
+                        'nisn' => $request->nisn, 
+                        'bulan_dibayar' => $bulan, 
+                        'tahun_dibayar' => $request->tahun_dibayar
+                    ])->exists();
+
+                    if (!$exists) {
                         Pembayaran::create([
-                            'id_petugas' => $id_petugas,
-                            'nisn' => $request->nisn,
-                            'tgl_bayar' => $request->tgl_bayar,
-                            'bulan_dibayar' => $bln,
+                            'id_petugas'    => $id_petugas,
+                            'nisn'          => $request->nisn,
+                            'tgl_bayar'     => $request->tgl_bayar,
+                            'bulan_dibayar' => $bulan,
                             'tahun_dibayar' => $request->tahun_dibayar,
-                            'id_spp' => $request->id_spp,
-                            'jumlah_bayar' => $spp->nominal,
+                            'id_spp'        => $request->id_spp,
+                            'jumlah_bayar'  => $spp->nominal,
                         ]);
+                        $bulanBerhasil++;
+                    } else {
+                        $bulanGagal[] = $bulan;
                     }
                 }
+
+                if ($bulanBerhasil > 0) {
+                    $message = "Berhasil: $bulanBerhasil bulan disimpan.";
+                    if (count($bulanGagal) > 0) {
+                        $message .= " Sudah dibayar: " . implode(', ', $bulanGagal);
+                    }
+                    return redirect()->route('pembayaran.index')->with('success', $message);
+                } else {
+                    return back()->with('error', 'Semua bulan yang dipilih sudah dibayar!')->withInput();
+                }
+            } 
+            
+            // 3. FULL YEAR PAYMENT (12 Bulan Sekaligus)
+            elseif ($tipeBayar === 'full_year') {
+                $request->validate([
+                    'bulan_full_year' => 'required|array|min:12',
+                    'bulan_full_year.*' => 'required|string'
+                ]);
+
+                $bulanDibayar = $request->bulan_full_year;
+                $jumlahBulan = count($bulanDibayar);
+                $bulanBerhasil = 0;
+                $bulanGagal = [];
+
+                foreach ($bulanDibayar as $bulan) {
+                    // Cek apakah bulan sudah dibayar
+                    $exists = Pembayaran::where([
+                        'nisn' => $request->nisn, 
+                        'bulan_dibayar' => $bulan, 
+                        'tahun_dibayar' => $request->tahun_dibayar
+                    ])->exists();
+
+                    if (!$exists) {
+                        Pembayaran::create([
+                            'id_petugas'    => $id_petugas,
+                            'nisn'          => $request->nisn,
+                            'tgl_bayar'     => $request->tgl_bayar,
+                            'bulan_dibayar' => $bulan,
+                            'tahun_dibayar' => $request->tahun_dibayar,
+                            'id_spp'        => $request->id_spp,
+                            'jumlah_bayar'  => $spp->nominal,
+                        ]);
+                        $bulanBerhasil++;
+                    } else {
+                        $bulanGagal[] = $bulan;
+                    }
+                }
+
+                if ($bulanBerhasil === 12) {
+                    return redirect()->route('pembayaran.index')
+                        ->with('success', 'Pembayaran 1 tahun penuh (12 bulan) berhasil disimpan!');
+                } elseif ($bulanBerhasil > 0) {
+                    $message = "Berhasil: $bulanBerhasil bulan disimpan.";
+                    if (count($bulanGagal) > 0) {
+                        $message .= " Sudah dibayar: " . implode(', ', $bulanGagal);
+                    }
+                    return redirect()->route('pembayaran.index')->with('warning', $message);
+                } else {
+                    return back()->with('error', 'Semua bulan sudah dibayar!')->withInput();
+                }
             }
-            return redirect()->route('pembayaran.index')->with('success', 'Transaksi Berhasil!');
+
+            return back()->with('error', 'Tipe pembayaran tidak valid!')->withInput();
         });
     }
 
@@ -123,7 +217,10 @@ class PembayaranController extends Controller
         $pembayaran = Pembayaran::findOrFail($id);
         $siswa = Siswa::all();
         $spp = Spp::all();
-        $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $bulan = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
         
         return view('pembayaran.edit', compact('pembayaran', 'siswa', 'spp', 'bulan'));
     }
@@ -135,13 +232,14 @@ class PembayaranController extends Controller
     {
         $request->validate([
             'tgl_bayar'     => 'required|date',
-            'jumlah_bayar'  => 'required|integer',
+            'jumlah_bayar'  => 'required|integer|min:0',
         ]);
 
         $pembayaran = Pembayaran::findOrFail($id);
         $pembayaran->update($request->only(['tgl_bayar', 'jumlah_bayar']));
 
-        return redirect()->route('pembayaran.index')->with('success', 'Data diperbarui!');
+        return redirect()->route('pembayaran.index')
+            ->with('success', 'Data pembayaran berhasil diperbarui!');
     }
 
     /**
@@ -149,7 +247,10 @@ class PembayaranController extends Controller
      */
     public function destroy($id)
     {
-        Pembayaran::findOrFail($id)->delete();
-        return redirect()->route('pembayaran.index')->with('success', 'Data dihapus!');
+        $pembayaran = Pembayaran::findOrFail($id);
+        $pembayaran->delete();
+        
+        return redirect()->route('pembayaran.index')
+            ->with('success', 'Data pembayaran berhasil dihapus!');
     }
 }
