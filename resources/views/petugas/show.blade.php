@@ -95,12 +95,12 @@
                 <i class="fas fa-edit"></i> Edit
             </a>
             @if(session('petugas')->id_petugas != $petuga->id_petugas)
-            <form action="{{ route('petugas.destroy', $petuga->id_petugas) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
+            <button type="button" class="btn-danger" onclick="confirmDelete('{{ $petuga->id_petugas }}')">
+                <i class="fas fa-trash-alt"></i> Hapus
+            </button>
+            <form id="delete-form-{{ $petuga->id_petugas }}" action="{{ route('petugas.destroy', $petuga->id_petugas) }}" method="POST" style="display: none;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn-danger">
-                    <i class="fas fa-trash-alt"></i> Hapus
-                </button>
             </form>
             @endif
         </div>
@@ -138,5 +138,65 @@
 .text-muted {
     color: #7f8c8d;
 }
+
+/* Button Delete Enhancement */
+.btn-danger {
+    background: linear-gradient(135deg, #eb3941 0%, #f15e64 100%);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(235, 57, 65, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d32f2f 0%, #eb3941 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(235, 57, 65, 0.4);
+}
+
+.btn-danger:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(235, 57, 65, 0.3);
+}
+
+.btn-danger i {
+    font-size: 14px;
+}
 </style>
+
+<script>
+function confirmDelete(id) {
+    // Konfirmasi dengan SweetAlert2 jika tersedia, atau confirm biasa
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Konfirmasi Hapus',
+            text: 'Apakah Anda yakin ingin menghapus petugas ini? Data yang sudah dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#eb3941',
+            cancelButtonColor: '#95a5a6',
+            confirmButtonText: '<i class="fas fa-trash-alt"></i> Ya, Hapus!',
+            cancelButtonText: '<i class="fas fa-times"></i> Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    } else {
+        // Fallback ke confirm biasa
+        if (confirm('Apakah Anda yakin ingin menghapus petugas ini?')) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    }
+}
+</script>
 @endsection
